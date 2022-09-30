@@ -44,13 +44,8 @@ struct ContentView: View {
                     }
                     
                     ForEach(0 ..< 3) { number in
-                        Button {
+                        FlagImage(name: countries[number]) {
                             flagTapped(number)
-                        } label: {
-                            Image(countries[number])
-                                .renderingMode(.original)
-                                .clipShape(Capsule())
-                                .shadow(radius: 5)
                         }
                     }
                 }
@@ -91,10 +86,6 @@ struct ContentView: View {
         
         showingScore = true
         rounds += 1
-        if rounds == 8 {
-            showGameOver = true
-        }
-        print(rounds)
     }
     
     func resetGame() {
@@ -104,6 +95,9 @@ struct ContentView: View {
     }
     
     func askQuestion() {
+        if rounds == 8 {
+            showGameOver = true
+        }
         countries.shuffle()
         correctAnswer = Int.random(in: 0 ... 2)
     }
