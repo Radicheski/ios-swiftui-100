@@ -18,6 +18,16 @@ struct ContentView: View {
     @State private var alertMessage = ""
     @State private var showingAlert = false
     
+    @State private var bedtime = defaultBedtime
+    
+    static var defaultBedtime: String {
+        var components = DateComponents()
+        components.hour = 22
+        components.minute = 38
+        let bedtime = Calendar.current.date(from: components) ?? Date.now
+        return bedtime.formatted(date: .omitted, time: .shortened)
+    }
+    
     static var defaultWakeTime: Date {
         var components = DateComponents()
         components.hour = 7
@@ -28,27 +38,53 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             Form {
-                VStack(alignment: .leading, spacing: 0) {
+                Section {
+                    HStack {
+                        Spacer()
+                        DatePicker("Please enter a time", selection: $wakeUp, displayedComponents: .hourAndMinute)
+                            .labelsHidden()
+                        Spacer()
+                    }
+                } header: {
                     Text("When do you want to wake up?")
                         .font(.headline)
-                    DatePicker("Please enter a time", selection: $wakeUp, displayedComponents: .hourAndMinute)
-                        .labelsHidden()
                 }
-                VStack(alignment: .leading, spacing: 0) {
+                
+                Section {
+                    Stepper("\(sleepAmount.formatted()) hours", value : $sleepAmount, in: 4 ... 12, step: 0.25)
+                } header: {
                     Text("Desired amount of sleep")
                         .font(.headline)
-                    Stepper("\(sleepAmount.formatted()) hours", value : $sleepAmount, in: 4 ... 12, step: 0.25)
                 }
-                VStack(alignment: .leading, spacing: 0) {
+                
+                Section {
+                    Picker("How many cups?", selection: $coffeeAmount) {
+                        ForEach(1 ..< 21) {
+                            Text($0 == 1 ? "1 cup" : "\($0) cups")
+                        }
+                    }
+                } header: {
                     Text("Daily coffee intake")
                         .font(.headline)
-                    Stepper(coffeeAmount == 1 ? "1 cup" : "\(coffeeAmount) cups", value: $coffeeAmount, in: 1 ... 20)
+                }
+                
+                Section {
+                    HStack(alignment: .center) {
+                        Spacer()
+                        Text("\(bedtime)")
+                            .font(.title)
+                            .padding()
+                        Spacer()
+                    }
+                } header: {
+                    Text("Your ideal bedtime is ...")
+                        .font(.title3)
                 }
             }
             .navigationTitle("BetterRest")
-            .toolbar {
-                Button("Calculate", action: calculatedBedTime)
-            }
+            .onChange(of: wakeUp, perform: { _ in calculatedBedTime() })
+            .onChange(of: sleepAmount, perform: { _ in calculatedBedTime() })
+            .onChange(of: coffeeAmount, perform: { _ in calculatedBedTime() })
             .alert(alertTitle, isPresented: $showingAlert) {
                 Button("OK") { }
             } message: {
@@ -70,14 +106,12 @@ struct ContentView: View {
             
             let sleepTime = wakeUp - prediction.actualSleep
             
-            alertTitle = "Your ideal bedtime is ..."
-            alertMessage = sleepTime.formatted(date: .omitted, time: .shortened)
+            bedtime = sleepTime.formatted(date: .omitted, time: .shortened)
         } catch {
             alertTitle = "Error"
             alertMessage = "Sorry, there was a problem calculating your bedtime."
+            showingAlert = true
         }
-        
-        showingAlert = true
     }
 }
 
