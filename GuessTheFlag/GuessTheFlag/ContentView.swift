@@ -23,6 +23,10 @@ struct ContentView: View {
     @State private var rounds = 0
     @State private var showGameOver = false
     
+    @State private var rotationAngle = 0.0
+    @State private var flagTapped = -1
+    @State private var opacityFlag = false
+    
     var body: some View {
         ZStack {
             RadialGradient(stops: [.init(color: Color(red: 0.1, green: 0.2, blue: 0.45), location: 0.3),
@@ -46,7 +50,15 @@ struct ContentView: View {
                     ForEach(0 ..< 3) { number in
                         FlagImage(name: countries[number]) {
                             flagTapped(number)
+                            withAnimation() {
+                                flagTapped = number
+                                opacityFlag = true
+                                rotationAngle += 360
+                            }
                         }
+                        .rotation3DEffect(number == flagTapped ? .degrees(rotationAngle) : .zero,
+                                          axis: (x: 0, y: 1, z: 0))
+                        .opacity(opacityFlag && number != flagTapped ? 0.25 : 1)
                     }
                 }
                 .frame(maxWidth: .infinity)
@@ -100,6 +112,8 @@ struct ContentView: View {
         }
         countries.shuffle()
         correctAnswer = Int.random(in: 0 ... 2)
+        flagTapped = -1
+        opacityFlag = false
     }
 }
 
