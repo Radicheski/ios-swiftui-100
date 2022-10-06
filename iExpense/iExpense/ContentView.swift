@@ -15,18 +15,8 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             List {
-                ForEach(expenses.items) { item in
-                    HStack {
-                        VStack {
-                            Text(item.name)
-                                .font(.headline)
-                            Text(item.type)
-                        }
-                        Spacer()
-                        Text(item.amount, format: .currency(code: "USD"))
-                    }
-                }
-                .onDelete(perform: removeItems)
+                ExpenseView(type: "Business", expenses: expenses)
+                ExpenseView(type: "Personal", expenses: expenses)
             }
             .navigationTitle("iExpense")
             .toolbar {
@@ -40,10 +30,6 @@ struct ContentView: View {
                 AddView(expenses: expenses)
             }
         }
-    }
-    
-    func removeItems(at offsets: IndexSet) {
-        expenses.items.remove(atOffsets: offsets)
     }
 }
 

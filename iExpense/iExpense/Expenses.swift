@@ -28,4 +28,13 @@ class Expenses: ObservableObject {
         
         items = []
     }
+    
+    func getItems(for type: String) -> [ExpenseItem] {
+        items.filter { $0.type == type }
+    }
+    
+    func remove(ids: [UUID]) {
+        items.removeAll(where: { ids.contains($0.id) } )
+    }
+    
 }
