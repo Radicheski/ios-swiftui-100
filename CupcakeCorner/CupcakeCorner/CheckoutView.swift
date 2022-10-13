@@ -10,8 +10,9 @@ import SwiftUI
 struct CheckoutView: View {
     
     @ObservedObject var order: Order
-    @State private var showingConfirmation = false
-    @State private var confirmationMessage = ""
+    @State private var showingAlert = false
+    @State private var alertTitle = ""
+    @State private var alertMessage = ""
     
     var body: some View {
         ScrollView {
@@ -25,7 +26,7 @@ struct CheckoutView: View {
                 }
                 .frame(height: 233)
                 
-                Text("Your total is \(order.cost, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))")
+                Text("Your total is \(order.order.cost, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))")
                     .font(.title)
                 
                 Button("Place Order") {
@@ -38,10 +39,10 @@ struct CheckoutView: View {
         }
         .navigationTitle("Check out")
         .navigationBarTitleDisplayMode(.inline)
-        .alert("Thank you!", isPresented: $showingConfirmation) {
+        .alert(alertTitle, isPresented: $showingAlert) {
             Button("OK") { }
         } message: {
-            Text(confirmationMessage)
+            Text(alertMessage)
         }
     }
     
@@ -60,11 +61,15 @@ struct CheckoutView: View {
         do {
             let (ongoingData, _) = try await URLSession.shared.upload(for: request, from: outgoingData)
             let decodedOrder = try JSONDecoder().decode(Order.self, from: ongoingData)
-            confirmationMessage = "Your order for \(decodedOrder.quantity)x \(Order.types[decodedOrder.type].lowercased()) cupcakes is on its way!"
-            showingConfirmation = true
+            alertTitle = "Thank you!"
+            alertMessage = "Your order for \(decodedOrder.order.quantity)x \(Order.types[decodedOrder.order.type].lowercased()) cupcakes is on its way!"
         } catch {
+            alertTitle = "Sorry"
+            alertMessage = "Your order cannot be placed."
             print("Checkout failed.")
         }
+        
+        showingAlert = true
     }
 }
 
