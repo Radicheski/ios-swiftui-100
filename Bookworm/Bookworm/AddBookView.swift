@@ -43,12 +43,18 @@ struct AddBookView: View {
                     Button("Save") {
                         let newBook = Book(context: context)
                         
+                        title = title.trimmingCharacters(in: .whitespaces)
+                        author = author.trimmingCharacters(in: .whitespaces)
+                        genre = genre.trimmingCharacters(in: .whitespaces)
+                        review = review.trimmingCharacters(in: .whitespaces)
+                        
                         newBook.id = UUID()
-                        newBook.title = title
-                        newBook.author = author
+                        newBook.title = title.isEmpty ? "Unknown Book" : title
+                        newBook.author = author.isEmpty ? "Unknown Author" : author
                         newBook.rating = Int16(rating)
-                        newBook.genre = genre
+                        newBook.genre = genre.isEmpty ? "Fantasy" : genre
                         newBook.review = review
+                        newBook.date = .now
                         
                         try? context.save()
                         dismiss()
