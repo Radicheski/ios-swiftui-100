@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct UserView: View {
-    let user: User
+    let user: any User
     
     var body: some View {
         HStack {

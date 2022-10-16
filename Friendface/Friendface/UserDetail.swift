@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct UserDetail: View {
-    let user: User
+    let user: AnyUser
     
     var body: some View {
         Form {
@@ -26,6 +26,12 @@ struct UserDetail: View {
             Section("Friends") {
                 ForEach(user.friends) { friend in
                     Text(friend.name)
+                }
+            }
+            
+            Section("Tags") {
+                ForEach(user.tags, id: \.self) { tag in
+                    Text(tag)
                 }
             }
         }

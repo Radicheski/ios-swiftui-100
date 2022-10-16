@@ -8,7 +8,10 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var users = [User]()
+    @FetchRequest(sortDescriptors: []) private var zUsers: FetchedResults<CachedUser>
+    var users: [AnyUser] {
+        zUsers.map(AnyUser.init)
+    }
     
     var body: some View {
         NavigationView {
@@ -20,20 +23,6 @@ struct ContentView: View {
                 }
             }
             .navigationTitle("Friendface")
-        }
-        .onAppear {
-            Task {
-                await loadData()
-            }
-        }
-    }
-    
-    func loadData() async {
-        guard users.isEmpty else { return }
-        
-        if let url = URL(string: "https://www.hackingwithswift.com/samples/friendface.json"),
-            let users: [User] = try? await Network.getData(from: url) {
-            self.users = users
         }
     }
 }
