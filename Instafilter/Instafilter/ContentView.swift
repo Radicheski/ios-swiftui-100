@@ -12,12 +12,15 @@ import SwiftUI
 struct ContentView: View {
     @State private var image: Image?
     @State private var inputImage: UIImage?
+    @State private var processedImage: UIImage?
     @State private var filterIntensity: Float = 0.5
     
     @State private var showingImagePicker = false
     
-    @State private var currentFilter = CIFilter.sepiaTone()
+    @State private var currentFilter: CIFilter = .sepiaTone()
     let context = CIContext()
+    
+    @State private var showingFilterSheet = false
     
     var body: some View {
         NavigationView {
@@ -47,7 +50,7 @@ struct ContentView: View {
                 
                 HStack {
                     Button("Chage Filter") {
-                        
+                        showingFilterSheet = true
                     }
                     
                     Spacer()
@@ -61,6 +64,16 @@ struct ContentView: View {
             .sheet(isPresented: $showingImagePicker) {
                 ImagePicker(image: $inputImage)
             }
+            .confirmationDialog("Select a filter", isPresented: $showingFilterSheet) {
+                Button("Crystallize") { setCurrentFilter(.crystallize()) }
+                Button("Edges") { setCurrentFilter(.edges()) }
+                Button("Gaussian Blur") { setCurrentFilter(.gaussianBlur()) }
+                Button("Pixellate") { setCurrentFilter(.pixellate()) }
+                Button("Unsharp Mask") { setCurrentFilter(.unsharpMask()) }
+                Button("Vignette") { setCurrentFilter(.vignette()) }
+                Button("Sepia tone") { setCurrentFilter(.sepiaTone()) }
+                Button("Cancel", role: .cancel) { }
+            }
         }
     }
     
@@ -73,17 +86,42 @@ struct ContentView: View {
     }
     
     private func save() {
+        guard let processedImage = processedImage else { return }
         
+        ImageSave(processedImage)
+            .writeToPhotoAlbum {
+                print("Success!")
+            } errorHandler: {
+                print("Oops! \($0.localizedDescription)")
+            }
+    }
+    
+    private func setCurrentFilter(_ filter: CIFilter) {
+        currentFilter = filter
+        loadImage(inputImage)
     }
     
     private func applyProcessing() {
-        currentFilter.intensity = filterIntensity
+        let inputKeys = currentFilter.inputKeys
+        
+        if inputKeys.contains(kCIInputIntensityKey) {
+            currentFilter.setValue(filterIntensity, forKey: kCIInputIntensityKey)
+        }
+        
+        if inputKeys.contains(kCIInputRadiusKey) {
+            currentFilter.setValue(filterIntensity * 200, forKey: kCIInputRadiusKey)
+        }
+        
+        if inputKeys.contains(kCIInputScaleKey) {
+            currentFilter.setValue(filterIntensity * 10, forKey: kCIInputScaleKey)
+        }
 
         guard let outputImage = currentFilter.outputImage else { return }
         
         if let cgImage = context.createCGImage(outputImage, from: outputImage.extent) {
             let uiImage = UIImage(cgImage:  cgImage)
             image = Image(uiImage: uiImage)
+            processedImage = uiImage
         }
         
 
