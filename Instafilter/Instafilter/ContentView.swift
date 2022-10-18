@@ -14,6 +14,11 @@ struct ContentView: View {
     @State private var inputImage: UIImage?
     @State private var processedImage: UIImage?
     @State private var filterIntensity: Float = 0.5
+    @State private var filterRadius: Float = 0
+    @State private var filterScale: Float = 1
+    private var imageNotReadyToSave: Bool {
+        processedImage == nil
+    }
     
     @State private var showingImagePicker = false
     
@@ -49,6 +54,20 @@ struct ContentView: View {
                 .padding(.vertical)
                 
                 HStack {
+                    Text("Radius")
+                    Slider(value: $filterRadius)
+                        .onChange(of: filterRadius) { _ in applyProcessing() }
+                }
+                .padding(.vertical)
+                
+                HStack {
+                    Text("Scale")
+                    Slider(value: $filterScale)
+                        .onChange(of: filterScale) { _ in applyProcessing() }
+                }
+                .padding(.vertical)
+                
+                HStack {
                     Button("Chage Filter") {
                         showingFilterSheet = true
                     }
@@ -56,6 +75,7 @@ struct ContentView: View {
                     Spacer()
                     
                     Button("Save", action: save)
+                        .disabled(imageNotReadyToSave)
                 }
             }
             .padding([.horizontal, .bottom])
@@ -109,11 +129,11 @@ struct ContentView: View {
         }
         
         if inputKeys.contains(kCIInputRadiusKey) {
-            currentFilter.setValue(filterIntensity * 200, forKey: kCIInputRadiusKey)
+            currentFilter.setValue(filterRadius * 200, forKey: kCIInputRadiusKey)
         }
         
         if inputKeys.contains(kCIInputScaleKey) {
-            currentFilter.setValue(filterIntensity * 10, forKey: kCIInputScaleKey)
+            currentFilter.setValue(filterScale * 10, forKey: kCIInputScaleKey)
         }
 
         guard let outputImage = currentFilter.outputImage else { return }
