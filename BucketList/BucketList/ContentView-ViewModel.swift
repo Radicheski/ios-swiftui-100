@@ -17,6 +17,10 @@ extension ContentView {
         
         @Published var isUnlocked = false
         
+        @Published var alertTitle = ""
+        @Published var alertMessage = ""
+        @Published var isShowingAlert = false
+        
         let savePath = FileManager.documentDirectory.appending(path: "SavedPlaces")
         
         init() {
@@ -66,11 +70,17 @@ extension ContentView {
                         }
                         
                     } else {
-                        
+                        Task { @MainActor in
+                            self.alertTitle = "Authentication Error"
+                            self.alertMessage = "Failed to authenticate with biometrics."
+                            self.isShowingAlert = true
+                        }
                     }
                 }
             } else {
-                
+                alertTitle = "Authentication Error"
+                alertMessage = "Your device does not support biometric authentication."
+                isShowingAlert = true
             }
         }
     }

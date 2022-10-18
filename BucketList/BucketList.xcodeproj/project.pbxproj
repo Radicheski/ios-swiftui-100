@@ -16,6 +16,7 @@
 		AD8D42C028FF437900EC711E /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8D42BF28FF437900EC711E /* Result.swift */; };
 		AD8D42C228FF4BF800EC711E /* ContentView-ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8D42C128FF4BF800EC711E /* ContentView-ViewModel.swift */; };
 		AD8D42C428FF509A00EC711E /* FileManager-DocumentsDirectory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8D42C328FF509A00EC711E /* FileManager-DocumentsDirectory.swift */; };
+		ADBE073E28FF64A500D0AE38 /* EditView-ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBE073D28FF64A500D0AE38 /* EditView-ViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 		AD8D42BF28FF437900EC711E /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		AD8D42C128FF4BF800EC711E /* ContentView-ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView-ViewModel.swift"; sourceTree = "<group>"; };
 		AD8D42C328FF509A00EC711E /* FileManager-DocumentsDirectory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager-DocumentsDirectory.swift"; sourceTree = "<group>"; };
+		ADBE073D28FF64A500D0AE38 /* EditView-ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EditView-ViewModel.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +69,7 @@
 				AD8D42BD28FF3C6100EC711E /* EditView.swift */,
 				AD8D42BF28FF437900EC711E /* Result.swift */,
 				AD8D42C128FF4BF800EC711E /* ContentView-ViewModel.swift */,
+				ADBE073D28FF64A500D0AE38 /* EditView-ViewModel.swift */,
 				AD8D42C328FF509A00EC711E /* FileManager-DocumentsDirectory.swift */,
 				AD8D42B128FF1BF100EC711E /* Assets.xcassets */,
 				AD8D42B328FF1BF100EC711E /* Preview Content */,
@@ -157,6 +160,7 @@
 				AD8D42C228FF4BF800EC711E /* ContentView-ViewModel.swift in Sources */,
 				AD8D42C028FF437900EC711E /* Result.swift in Sources */,
 				AD8D42BC28FF341D00EC711E /* Location.swift in Sources */,
+				ADBE073E28FF64A500D0AE38 /* EditView-ViewModel.swift in Sources */,
 				AD8D42BE28FF3C6100EC711E /* EditView.swift in Sources */,
 				AD8D42AE28FF1BEE00EC711E /* BucketListApp.swift in Sources */,
 			);
