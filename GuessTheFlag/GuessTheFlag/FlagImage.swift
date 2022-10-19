@@ -9,6 +9,7 @@ import SwiftUI
 
 struct FlagImage: View {
     var name: String
+    var description: String?
     var onTap: () -> Void
     
     var body: some View {
@@ -19,6 +20,7 @@ struct FlagImage: View {
                 .renderingMode(.original)
                 .clipShape(Capsule())
                 .shadow(radius: 5)
+                .accessibilityLabel(description ?? "Unknown flag")
         }
     }
 }
