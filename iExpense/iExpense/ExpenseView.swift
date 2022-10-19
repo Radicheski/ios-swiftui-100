@@ -15,19 +15,29 @@ struct ExpenseView: View {
         expenses.getItems(for: type)
     }
     
+    private struct Line: View {
+        let item: ExpenseItem
+        
+        var body: some View {
+            HStack {
+                VStack {
+                    Text(item.name)
+                        .font(.headline)
+                }
+                Spacer()
+                Text(item.amount, format: Format.curency)
+                    .foregroundColor(item.amount > 100 ? .red : (item.amount < 10 ? .green : nil))
+            }
+            .accessibilityElement()
+            .accessibilityLabel("\(item.name), \(item.amount, format: Format.curency)")
+            .accessibilityHint(item.type)
+        }
+    }
+    
     var body: some View {
         Section(type) {
             ForEach(items) { item in
-                HStack {
-                    VStack {
-                        Text(item.name)
-                            .font(.headline)
-                    }
-                    Spacer()
-                    Text(item.amount, format: Format.curency)
-                        .foregroundColor(item.amount > 100 ? .red : (item.amount < 10 ? .green : nil))
-                }
-                
+                Line(item: item)
             }
             .onDelete(perform: removeItems)
         }
