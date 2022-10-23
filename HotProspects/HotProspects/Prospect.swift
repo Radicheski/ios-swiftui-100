@@ -24,7 +24,8 @@ class Prospect: Identifiable, Codable {
     }
     
     init() {
-        if let data = UserDefaults.standard.data(forKey: userDefaultsKey) {
+        let url = Self.documentDirectory.appending(component: userDefaultsKey)
+        if let data = try? Data(contentsOf: url) {
             if let decoded = try? JSONDecoder().decode([Prospect].self, from: data) {
                 people = decoded
                 return
@@ -35,8 +36,9 @@ class Prospect: Identifiable, Codable {
     }
     
     private func save() {
+        let url = Self.documentDirectory.appending(component: userDefaultsKey)
         if let encoded = try? JSONEncoder().encode(people) {
-            UserDefaults.standard.set(encoded, forKey: userDefaultsKey)
+            try? encoded.write(to: url)
         }
     }
     
@@ -48,5 +50,9 @@ class Prospect: Identifiable, Codable {
     
     func add(_ prospect: Prospect) {
         people.append(prospect)
+    }
+    
+    static var documentDirectory: URL {
+        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     }
 }
