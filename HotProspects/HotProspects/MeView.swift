@@ -17,6 +17,8 @@ struct MeView: View {
     private let context = CIContext()
     private let filter = CIFilter.qrCodeGenerator()
     
+    @State private var qrCode = UIImage()
+    
     var body: some View {
         NavigationView {
             Form {
@@ -28,14 +30,29 @@ struct MeView: View {
                     .textContentType(.emailAddress)
                     .font(.title)
                 
-                Image(uiImage: generateQRCode(from: "\(name)\n\(emailAddress)"))
+                Image(uiImage: qrCode)
                     .interpolation(.none)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 200, height: 200)
+                    .contextMenu {
+                        Button {
+                            let imageSaver = ImageSaver(qrCode)
+                            imageSaver.writeToPhotoAlbum()
+                        } label: {
+                            Label("Save to Photos", systemImage: "square.and.arrow.down")
+                        }
+                    }
             }
             .navigationTitle("Your code")
+            .onAppear(perform:  updateCode)
+            .onChange(of: name) { _ in updateCode() }
+            .onChange(of: emailAddress) { _ in updateCode() }
         }
+    }
+    
+    func updateCode() {
+        qrCode = generateQRCode(from: "\(name)\n\(emailAddress)")
     }
     
     func generateQRCode(from string: String) -> UIImage {
